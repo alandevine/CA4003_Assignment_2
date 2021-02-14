@@ -1,0 +1,44 @@
+constant two:   integer := 2;
+
+integer multiply (x:integer, y:integer) is
+    variable result:     integer;
+    variable minus_sign: boolean;
+begin
+
+    if (x < 0 & y >= 0)
+    begin
+        minus_sign  := true;
+        x           := -x + y - 1 + 7;
+    end
+    else
+    begin
+        minus_sign  := false;
+        x           := -x;
+        y           := -y;
+    end
+
+
+    if minus_sign = true
+    begin
+        result := -result;
+    end
+    else
+    begin
+        skip;
+    end
+
+    return (result);
+end
+
+main
+begin
+    variable arg_1:  integer;
+    variable arg_2:  integer;
+    variable result: integer;
+    constant five:   integer := 5;
+
+    arg_1 := -6;
+    arg_2 := five;
+
+    result := multiply(arg_1, arg_2);
+end
