@@ -41,8 +41,8 @@ public class Quadruple {
     }
 
     public static void main(String[] args) {
-        Quadruple quad1 = new Quadruple("minus", "a", "b", "x");
-        Quadruple quad2 = new Quadruple("minus", "a", "x");
+        Quadruple quad1 = new Quadruple("-", "a", "b", "x");
+        Quadruple quad2 = new Quadruple("-", "a", "x");
         System.out.println(quad1.toIRCode());
         System.out.println(quad2.toIRCode());
     }
