@@ -16,10 +16,7 @@ public class Quadruple {
     public Quadruple(String op, String arg1, String result) {
         this.op = op;
         this.arg1 = arg1;
-        if (op.equals("-"))
-            this.arg2 = "0";
-        else
-            this.arg2 = null;
+        this.arg2 = (op.equals("-")) ? "0" : null;
         this.result = result;
     }
 
