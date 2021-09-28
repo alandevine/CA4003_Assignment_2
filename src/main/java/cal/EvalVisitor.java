@@ -1,7 +1,12 @@
+package cal;
+
+import java.util.Arrays;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.util.Arrays;
+import calBase.CALBaseVisitor;
+import calBase.CALParser;
 
 public class EvalVisitor extends CALBaseVisitor<String> {
     private final SymbolTable st;

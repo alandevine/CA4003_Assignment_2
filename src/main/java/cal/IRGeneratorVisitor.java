@@ -1,3 +1,8 @@
+package cal;
+
+import calBase.CALBaseVisitor;
+import calBase.CALParser;
+
 public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     private int paramIdx = 1;
     private int jmpIdx = 1;

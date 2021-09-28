@@ -1,4 +1,9 @@
-import java.util.*;
+package cal;
+
+import java.util.EmptyStackException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
 public class SymbolTable {
 

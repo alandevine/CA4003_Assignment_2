@@ -1,4 +1,4 @@
-grammar CAL;
+grammar cal;
 
 
 /* Statements */
