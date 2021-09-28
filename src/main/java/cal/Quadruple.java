@@ -24,16 +24,13 @@ public class Quadruple {
     }
 
     public String toIRCode() {
-        String line;
-
         if (this.op.equals("="))
-            line = String.format("\t%s %s %s", this.result, this.op, this.arg1);
-        else if (arg2 != null)
-            line = String.format("\t%s = %s %s %s", this.result, this.arg2, this.op, this.arg1);
-        else
-            line = String.format("\t%s = %s %s", this.result, this.op, this.arg1);
+            return String.format("\t%s %s %s", this.result, this.op, this.arg1);
 
-        return line;
+        if (arg2 != null)
+            return String.format("\t%s = %s %s %s", this.result, this.arg2, this.op, this.arg1);
+        
+        return String.format("\t%s = %s %s", this.result, this.op, this.arg1);
     }
 
     @Override
