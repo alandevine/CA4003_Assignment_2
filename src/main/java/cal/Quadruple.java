@@ -1,11 +1,24 @@
 package cal;
 
+/**
+ * Object representation of a single line of arithmetic in Intermediate Code.
+ * TODO: Implement QuadrupleInterface and separate binary and unary arithmetic into different implementations.
+ * @author Alan
+ *
+ */
 public class Quadruple {
     private final String op;
     private final String arg1;
     private final String arg2;
     private final String result;
 
+    /**
+     * Constructor for binary operations, i.e. addition, subtraction, multiplication
+     * @param op Binary operator.
+     * @param arg1 left-hand value.
+     * @param arg2 right-hand value.
+     * @param result Assignment variable.
+     */
     public Quadruple(String op, String arg1, String arg2, String result) {
         this.op = op;
         this.arg1 = arg1;
@@ -13,6 +26,12 @@ public class Quadruple {
         this.result = result;
     }
 
+    /**
+     * Constructor for unary operations, i.e. assignment and negation.
+     * @param op Unary operator
+     * @param arg1 Value
+     * @param result Assignment variable
+     */
     public Quadruple(String op, String arg1, String result) {
         this.op = op;
         this.arg1 = arg1;
