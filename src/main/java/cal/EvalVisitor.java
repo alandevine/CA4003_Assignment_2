@@ -17,14 +17,14 @@ public class EvalVisitor extends calBaseVisitor<String> {
 
     @Override
     public String visitProgStm(calParser.ProgStmContext ctx) {
-        st.put("BEGINBLOCK", "NULL");
+        st.enterScope();
         if (ctx.decl_list() != null)
             visit(ctx.decl_list());
         if (ctx.function_list() != null)
             visit(ctx.function_list());
         if (ctx.main() != null)
             visit(ctx.main());
-        st.put("ENDBLOCK", "NULL");
+        st.exitScope();
         return "";
     }
 
@@ -82,7 +82,7 @@ public class EvalVisitor extends calBaseVisitor<String> {
         String type = ctx.type().getText();
 
         st.put(id, type);
-        st.put("BEGINBLOCK", "NULL");
+        st.enterScope();
 
         type = type + "_" + visit(ctx.parameter_list());
 
@@ -93,7 +93,7 @@ public class EvalVisitor extends calBaseVisitor<String> {
         if (ctx.statement_block() != null)
             visit(ctx.statement_block());
 
-        st.put("ENDBLOCK", "NULL");
+        st.exitScope();
 
         return id;
     }
@@ -148,13 +148,13 @@ public class EvalVisitor extends calBaseVisitor<String> {
 
     @Override
     public String visitMainStm(calParser.MainStmContext ctx) {
-        st.put("BEGINBLOCK", "NULL");
+        st.enterScope();
 
         if (ctx.decl_list() != null)
             visit(ctx.decl_list());
         if (ctx.statement_block() != null)
             visit(ctx.statement_block());
-        st.put("ENDBLOCK", "NULL");
+        st.exitScope();
         return "";
     }
 

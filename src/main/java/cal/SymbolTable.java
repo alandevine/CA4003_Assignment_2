@@ -7,6 +7,7 @@ import java.util.Stack;
 
 public class SymbolTable {
 
+    public static final String BEGIN_BLOCK = "BEGINBLOCK";
     private final Map<String, String> st;
     private final Stack<String> undoStack;
 
@@ -49,6 +50,14 @@ public class SymbolTable {
         st.replace(id, type);
     }
 
+    public void enterScope() {
+        this.put(BEGIN_BLOCK, "NULL");
+    }
+
+    public void exitScope() {
+        this.put("ENDBLOCK", "NULL");
+    }
+
     private void purgeStack() throws EmptyStackException {
         String stackHead;
         do {
@@ -56,7 +65,7 @@ public class SymbolTable {
             st.remove(stackHead);
             if (undoStack.isEmpty())
                 return;
-        } while (!stackHead.equals("BEGINBLOCK"));
+        } while (!stackHead.equals(BEGIN_BLOCK));
     }
 
     @Override
