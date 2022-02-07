@@ -5,10 +5,10 @@ import java.util.Arrays;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import calBase.CALBaseVisitor;
-import calBase.CALParser;
+import org.cal.antlr.calBaseVisitor;
+import org.cal.antlr.calParser;
 
-public class EvalVisitor extends CALBaseVisitor<String> {
+public class EvalVisitor extends calBaseVisitor<String> {
     private final SymbolTable st;
 
     public EvalVisitor() {
@@ -16,7 +16,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitProgStm(CALParser.ProgStmContext ctx) {
+    public String visitProgStm(calParser.ProgStmContext ctx) {
         st.put("BEGINBLOCK", "NULL");
         if (ctx.decl_list() != null)
             visit(ctx.decl_list());
@@ -28,10 +28,8 @@ public class EvalVisitor extends CALBaseVisitor<String> {
         return "";
     }
 
-
-
     @Override
-    public String visitDeclListStm(CALParser.DeclListStmContext ctx) {
+    public String visitDeclListStm(calParser.DeclListStmContext ctx) {
         if (ctx.decl() != null)
             visit(ctx.decl());
         if (ctx.decl_list() != null)
@@ -40,19 +38,19 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitVarDeclRef(CALParser.VarDeclRefContext ctx) {
+    public String visitVarDeclRef(calParser.VarDeclRefContext ctx) {
         return visit(ctx.var_decl());
     }
 
     @Override
-    public String visitConstDeclRef(CALParser.ConstDeclRefContext ctx) {
+    public String visitConstDeclRef(calParser.ConstDeclRefContext ctx) {
         return visit(ctx.const_decl());
     }
 
 
 
     @Override
-    public String visitVarDeclStm(CALParser.VarDeclStmContext ctx) {
+    public String visitVarDeclStm(calParser.VarDeclStmContext ctx) {
         String id = ctx.ID().getText();
         String type = ctx.type().getText();
 
@@ -61,7 +59,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitConstDeclStm(CALParser.ConstDeclStmContext ctx) {
+    public String visitConstDeclStm(calParser.ConstDeclStmContext ctx) {
         String id = ctx.ID().getText();
         String type = ctx.type().getText();
         st.put(id, type);
@@ -69,7 +67,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitFuncListStm(CALParser.FuncListStmContext ctx) {
+    public String visitFuncListStm(calParser.FuncListStmContext ctx) {
         if (ctx.function() != null)
             visit(ctx.function());
         if (ctx.function_list() != null)
@@ -78,7 +76,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitFuncDeclStm(CALParser.FuncDeclStmContext ctx) {
+    public String visitFuncDeclStm(calParser.FuncDeclStmContext ctx) {
 
         String id = ctx.ID().getText();
         String type = ctx.type().getText();
@@ -101,14 +99,14 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitNonEmptyParamRef(CALParser.NonEmptyParamRefContext ctx) {
+    public String visitNonEmptyParamRef(calParser.NonEmptyParamRefContext ctx) {
         if (ctx.nemp_paramerter_list() != null)
             return "" + visit(ctx.nemp_paramerter_list());
         return "";
     }
 
     @Override
-    public String visitSingleParamStm(CALParser.SingleParamStmContext ctx) {
+    public String visitSingleParamStm(calParser.SingleParamStmContext ctx) {
         String id = ctx.ID().getText();
         String type = ctx.type().getText();
 
@@ -117,7 +115,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitMultipleParamStm(CALParser.MultipleParamStmContext ctx) {
+    public String visitMultipleParamStm(calParser.MultipleParamStmContext ctx) {
         String type = "";
         if (ctx.ID() != null && ctx.type() != null) {
             st.put(ctx.ID().getText(), ctx.type().getText());
@@ -129,7 +127,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitMultIdArgRef(CALParser.MultIdArgRefContext ctx) {
+    public String visitMultIdArgRef(calParser.MultIdArgRefContext ctx) {
         String type = "";
         if (ctx.ID() != null)
             type += st.get(ctx.ID().getText()) + "_";
@@ -139,7 +137,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitIdArgRef(CALParser.IdArgRefContext ctx) {
+    public String visitIdArgRef(calParser.IdArgRefContext ctx) {
         if (ctx.ID() != null)
             if (!st.contains(ctx.ID().getText())) {
                 System.out.println("ERROR @ " + ctx.start.getLine());
@@ -149,7 +147,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitMainStm(CALParser.MainStmContext ctx) {
+    public String visitMainStm(calParser.MainStmContext ctx) {
         st.put("BEGINBLOCK", "NULL");
 
         if (ctx.decl_list() != null)
@@ -161,7 +159,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitStmBlockRef(CALParser.StmBlockRefContext ctx) {
+    public String visitStmBlockRef(calParser.StmBlockRefContext ctx) {
         if (ctx.statement() != null)
             visit(ctx.statement());
         if (ctx.statement_block() != null)
@@ -170,7 +168,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitAssignStm(CALParser.AssignStmContext ctx) {
+    public String visitAssignStm(calParser.AssignStmContext ctx) {
         String id = ctx.ID().getText();
         String exp_type = visit(ctx.expression());
 
@@ -197,7 +195,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitFragBinArithStm(CALParser.FragBinArithStmContext ctx) {
+    public String visitFragBinArithStm(calParser.FragBinArithStmContext ctx) {
         boolean isInt = true;
 
         if (ctx.expression(0) != null)
@@ -215,7 +213,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitBeginStm(CALParser.BeginStmContext ctx) {
+    public String visitBeginStm(calParser.BeginStmContext ctx) {
         st.put("BEGIN", "NULL");
         visit(ctx.statement_block());
         st.put("BEGIN", "NULL");
@@ -223,7 +221,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitConditionalStm(CALParser.ConditionalStmContext ctx) {
+    public String visitConditionalStm(calParser.ConditionalStmContext ctx) {
         if (ctx.condition() != null)
             visit(ctx.condition());
         if (ctx.statement_block() != null)
@@ -234,7 +232,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitWhileStm(CALParser.WhileStmContext ctx) {
+    public String visitWhileStm(calParser.WhileStmContext ctx) {
         if (ctx.condition() != null)
             visit(ctx.condition());
         if (ctx.statement_block() != null)
@@ -243,16 +241,16 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitFuncCallStm(CALParser.FuncCallStmContext ctx) {
+    public String visitFuncCallStm(calParser.FuncCallStmContext ctx) {
         return funcHandler(ctx.ID(), ctx.argument_list(), ctx);
     }
 
     @Override
-    public String visitFuncCallExpr(CALParser.FuncCallExprContext ctx) {
+    public String visitFuncCallExpr(calParser.FuncCallExprContext ctx) {
         return funcHandler(ctx.ID(), ctx.argument_list(), ctx);
     }
 
-    private String funcHandler(TerminalNode id2, CALParser.Argument_listContext argument_listContext, ParserRuleContext ctx) {
+    private String funcHandler(TerminalNode id2, calParser.Argument_listContext argument_listContext, ParserRuleContext ctx) {
         String id = id2.getText();
 
         if (!st.contains(id)) {
@@ -282,7 +280,7 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitIdFrag(CALParser.IdFragContext ctx) {
+    public String visitIdFrag(calParser.IdFragContext ctx) {
         String id = ctx.ID().getText();
         String type = st.get(id);
 
@@ -295,27 +293,27 @@ public class EvalVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitIntStm(CALParser.IntStmContext ctx) {
+    public String visitIntStm(calParser.IntStmContext ctx) {
         return "integer";
     }
 
     @Override
-    public String visitNegationStm(CALParser.NegationStmContext ctx) {
+    public String visitNegationStm(calParser.NegationStmContext ctx) {
         return "integer";
     }
 
     @Override
-    public String visitType(CALParser.TypeContext ctx) {
+    public String visitType(calParser.TypeContext ctx) {
         return ctx.getText();
     }
 
     @Override
-    public String visitTrueStm(CALParser.TrueStmContext ctx) {
+    public String visitTrueStm(calParser.TrueStmContext ctx) {
         return ctx.True().getText();
     }
 
     @Override
-    public String visitFalseStm(CALParser.FalseStmContext ctx) {
+    public String visitFalseStm(calParser.FalseStmContext ctx) {
         return ctx.False().getText();
     }
 }

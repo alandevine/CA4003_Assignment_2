@@ -1,18 +1,17 @@
 package cal;
 
+import org.cal.antlr.calLexer;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.cal.antlr.calParser;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
-
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-
-import calBase.CALLexer;
-import calBase.CALParser;
 
 public class App {
 
@@ -30,10 +29,10 @@ public class App {
         }
 
         InputStream inputStream = new FileInputStream(inputFile);
-        CALLexer lexer = new CALLexer(CharStreams.fromStream(inputStream));
+        calLexer lexer = new calLexer(CharStreams.fromStream(inputStream));
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        CALParser parser = new CALParser(tokens);
+        calParser parser = new calParser(tokens);
 
         ParseTree tree = parser.prog();
 

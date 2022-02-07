@@ -1,15 +1,15 @@
 package cal;
 
-import calBase.CALBaseVisitor;
-import calBase.CALParser;
+import org.cal.antlr.calBaseVisitor;
+import org.cal.antlr.calParser;
 
-public class IRGeneratorVisitor extends CALBaseVisitor<String> {
+public class IRGeneratorVisitor extends calBaseVisitor<String> {
     private int paramIdx = 1;
     private int jmpIdx = 1;
     private final QuadrupleQueue quadQueue = new QuadrupleQueue();
 
     @Override
-    public String visitProgStm(CALParser.ProgStmContext ctx) {
+    public String visitProgStm(calParser.ProgStmContext ctx) {
         String code = "";
 
         if (ctx.decl_list() != null)
@@ -23,7 +23,7 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitDeclListStm(CALParser.DeclListStmContext ctx) {
+    public String visitDeclListStm(calParser.DeclListStmContext ctx) {
         String code = "";
 
         if (ctx.decl() != null)
@@ -35,37 +35,37 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitType(CALParser.TypeContext ctx) {
+    public String visitType(calParser.TypeContext ctx) {
         return ctx.getText();
     }
 
     @Override
-    public String visitEmptyStm(CALParser.EmptyStmContext ctx) {
+    public String visitEmptyStm(calParser.EmptyStmContext ctx) {
         return "";
     }
 
     @Override
-    public String visitVarDeclRef(CALParser.VarDeclRefContext ctx) {
+    public String visitVarDeclRef(calParser.VarDeclRefContext ctx) {
         return "";
     }
 
     @Override
-    public String visitVarDeclStm(CALParser.VarDeclStmContext ctx) {
+    public String visitVarDeclStm(calParser.VarDeclStmContext ctx) {
         return "";
     }
 
     @Override
-    public String visitConstDeclRef(CALParser.ConstDeclRefContext ctx) {
+    public String visitConstDeclRef(calParser.ConstDeclRefContext ctx) {
         return visit(ctx.const_decl());
     }
 
     @Override
-    public String visitConstDeclStm(CALParser.ConstDeclStmContext ctx) {
+    public String visitConstDeclStm(calParser.ConstDeclStmContext ctx) {
         return "\t" + ctx.ID().getText() + " = " + visit(ctx.expression()) + "\n";
     }
 
     @Override
-    public String visitFuncListStm(CALParser.FuncListStmContext ctx) {
+    public String visitFuncListStm(calParser.FuncListStmContext ctx) {
         String code = "";
 
         if (ctx.function() != null)
@@ -77,7 +77,7 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitFuncDeclStm(CALParser.FuncDeclStmContext ctx) {
+    public String visitFuncDeclStm(calParser.FuncDeclStmContext ctx) {
         String code = "";
         this.paramIdx = 1;
 
@@ -96,7 +96,7 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitNonEmptyParamRef(CALParser.NonEmptyParamRefContext ctx) {
+    public String visitNonEmptyParamRef(calParser.NonEmptyParamRefContext ctx) {
         String code = "";
         if (ctx.nemp_paramerter_list() != null)
             code += visit(ctx.nemp_paramerter_list());
@@ -104,14 +104,14 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitSingleParamStm(CALParser.SingleParamStmContext ctx) {
+    public String visitSingleParamStm(calParser.SingleParamStmContext ctx) {
         String line = "\t" + ctx.ID().getText() + " = getparam " + paramIdx + "\n";
         this.paramIdx++;
         return line;
     }
 
     @Override
-    public String visitMultipleParamStm(CALParser.MultipleParamStmContext ctx) {
+    public String visitMultipleParamStm(calParser.MultipleParamStmContext ctx) {
         String code = "";
         if (ctx.ID() != null) {
             code += "\t" + ctx.ID().getText() + " = getparam " + paramIdx + "\n";
@@ -122,7 +122,7 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitMainStm(CALParser.MainStmContext ctx) {
+    public String visitMainStm(calParser.MainStmContext ctx) {
         String code = "main:\n";
         if (ctx.decl_list() != null)
             code += visit(ctx.decl_list());
@@ -134,7 +134,7 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitStmBlockRef(CALParser.StmBlockRefContext ctx) {
+    public String visitStmBlockRef(calParser.StmBlockRefContext ctx) {
         String code = "";
         if (ctx.statement() != null)
             code += visit(ctx.statement()) + "\n";
@@ -144,12 +144,12 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitEmptyStatment(CALParser.EmptyStatmentContext ctx) {
+    public String visitEmptyStatment(calParser.EmptyStatmentContext ctx) {
         return "";
     }
 
     @Override
-    public String visitAssignStm(CALParser.AssignStmContext ctx) {
+    public String visitAssignStm(calParser.AssignStmContext ctx) {
         String code = visit(ctx.expression());
         quadQueue.clear();
         String[] lines = code.split("\n");
@@ -166,7 +166,7 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitFuncCallStm(CALParser.FuncCallStmContext ctx) {
+    public String visitFuncCallStm(calParser.FuncCallStmContext ctx) {
         String code = "";
         if (ctx.argument_list() != null)
             code += visit(ctx.argument_list());
@@ -175,7 +175,7 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitFuncCallExpr(CALParser.FuncCallExprContext ctx) {
+    public String visitFuncCallExpr(calParser.FuncCallExprContext ctx) {
 
         String code = "";
 
@@ -188,12 +188,12 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitBeginStm(CALParser.BeginStmContext ctx) {
+    public String visitBeginStm(calParser.BeginStmContext ctx) {
         return "\t" + visit(ctx.statement_block()) + "\n";
     }
 
     @Override
-    public String visitConditionalStm(CALParser.ConditionalStmContext ctx) {
+    public String visitConditionalStm(calParser.ConditionalStmContext ctx) {
         String code = "";
 
         int jmpTo;
@@ -251,7 +251,7 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitWhileStm(CALParser.WhileStmContext ctx) {
+    public String visitWhileStm(calParser.WhileStmContext ctx) {
         String code = "l" + jmpIdx + ":\n";
         if (ctx.condition() != null)
             code += "\t" + "ifz " + visit(ctx.condition()) + " goto exit" + jmpIdx + "\n";
@@ -264,39 +264,39 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitSkipStm(CALParser.SkipStmContext ctx) {
+    public String visitSkipStm(calParser.SkipStmContext ctx) {
         return "";
     }
 
     @Override
-    public String visitFragBinArithStm(CALParser.FragBinArithStmContext ctx) {
+    public String visitFragBinArithStm(calParser.FragBinArithStmContext ctx) {
         int tmpN = quadQueue.getTmpCounter();
         quadQueue.add(visit(ctx.binary_arith_op()), visit(ctx.expression(0)), visit(ctx.expression(1)), "t" + tmpN);
         return "t" + tmpN;
     }
 
     @Override
-    public String visitParenExpreStm(CALParser.ParenExpreStmContext ctx) {
+    public String visitParenExpreStm(calParser.ParenExpreStmContext ctx) {
         return "";
     }
 
     @Override
-    public String visitFragRef(CALParser.FragRefContext ctx) {
+    public String visitFragRef(calParser.FragRefContext ctx) {
         return visit(ctx.fragm());
     }
 
     @Override
-    public String visitBoolNegStm(CALParser.BoolNegStmContext ctx) {
+    public String visitBoolNegStm(calParser.BoolNegStmContext ctx) {
         return ctx.NOT() + " " + visit(ctx.condition());
     }
 
     @Override
-    public String visitParenConditionalStm(CALParser.ParenConditionalStmContext ctx) {
+    public String visitParenConditionalStm(calParser.ParenConditionalStmContext ctx) {
         return visit(ctx.condition());
     }
 
     @Override
-    public String visitBoolEvalStm(CALParser.BoolEvalStmContext ctx) {
+    public String visitBoolEvalStm(calParser.BoolEvalStmContext ctx) {
         String op;
         if (ctx.AND() != null)
             op = "&&";
@@ -307,29 +307,29 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitBoolArithStm(CALParser.BoolArithStmContext ctx) {
+    public String visitBoolArithStm(calParser.BoolArithStmContext ctx) {
         return visit(ctx.expression(0)) + " " + visit(ctx.comp_operators()) + " " + visit(ctx.expression(1));
     }
 
     @Override
-    public String visitIdFrag(CALParser.IdFragContext ctx) {
+    public String visitIdFrag(calParser.IdFragContext ctx) {
         return ctx.ID().getText();
     }
 
     @Override
-    public String visitFragUnaArithStm(CALParser.FragUnaArithStmContext ctx) {
+    public String visitFragUnaArithStm(calParser.FragUnaArithStmContext ctx) {
         int tmpN = quadQueue.getTmpCounter();
         quadQueue.add(visit(ctx.binary_arith_op()), visit(ctx.fragm()), "t" + tmpN);
         return "t" + tmpN;
     }
 
     @Override
-    public String visitNegationStm(CALParser.NegationStmContext ctx) {
+    public String visitNegationStm(calParser.NegationStmContext ctx) {
         return ctx.ID().getText();
     }
 
     @Override
-    public String visitIntStm(CALParser.IntStmContext ctx) {
+    public String visitIntStm(calParser.IntStmContext ctx) {
         String num = ctx.NUMBER().getText();
 
         if (Integer.parseInt(num) < 0)
@@ -339,17 +339,17 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitTrueStm(CALParser.TrueStmContext ctx) {
+    public String visitTrueStm(calParser.TrueStmContext ctx) {
         return ctx.True().getText();
     }
 
     @Override
-    public String visitFalseStm(CALParser.FalseStmContext ctx) {
+    public String visitFalseStm(calParser.FalseStmContext ctx) {
         return ctx.False().getText();
     }
 
     @Override
-    public String visitNonEmptyArgListRef(CALParser.NonEmptyArgListRefContext ctx) {
+    public String visitNonEmptyArgListRef(calParser.NonEmptyArgListRefContext ctx) {
         String code = "";
         if (ctx.nemp_argument_list() != null)
             code += visit(ctx.nemp_argument_list());
@@ -358,7 +358,7 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitIdArgRef(CALParser.IdArgRefContext ctx) {
+    public String visitIdArgRef(calParser.IdArgRefContext ctx) {
         String code = "";
         if (ctx.ID() != null)
             code += "\tparam " + ctx.ID().getText() + "\n";
@@ -366,7 +366,7 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitMultIdArgRef(CALParser.MultIdArgRefContext ctx) {
+    public String visitMultIdArgRef(calParser.MultIdArgRefContext ctx) {
         String code = "";
         if (ctx.ID() != null)
             code += "\tparam " + ctx.ID().getText() + "\n";
@@ -376,47 +376,47 @@ public class IRGeneratorVisitor extends CALBaseVisitor<String> {
     }
 
     @Override
-    public String visitAdditionStm(CALParser.AdditionStmContext ctx) {
+    public String visitAdditionStm(calParser.AdditionStmContext ctx) {
         return "+";
     }
 
     @Override
-    public String visitSubtractionStm(CALParser.SubtractionStmContext ctx) {
+    public String visitSubtractionStm(calParser.SubtractionStmContext ctx) {
         return "-";
     }
 
     @Override
-    public String visitLogOr(CALParser.LogOrContext ctx) {
+    public String visitLogOr(calParser.LogOrContext ctx) {
         return ctx.OR().getText();
     }
 
     @Override
-    public String visitLogEq(CALParser.LogEqContext ctx) {
+    public String visitLogEq(calParser.LogEqContext ctx) {
         return ctx.EQUAL().getText();
     }
 
     @Override
-    public String visitLogNEq(CALParser.LogNEqContext ctx) {
+    public String visitLogNEq(calParser.LogNEqContext ctx) {
         return ctx.NOTEQUAL().getText();
     }
 
     @Override
-    public String visitLogLT(CALParser.LogLTContext ctx) {
+    public String visitLogLT(calParser.LogLTContext ctx) {
         return ctx.LT().getText();
     }
 
     @Override
-    public String visitLogLTE(CALParser.LogLTEContext ctx) {
+    public String visitLogLTE(calParser.LogLTEContext ctx) {
         return ctx.LTE().getText();
     }
 
     @Override
-    public String visitLogGT(CALParser.LogGTContext ctx) {
+    public String visitLogGT(calParser.LogGTContext ctx) {
         return ctx.GT().getText();
     }
 
     @Override
-    public String visitLogGTE(CALParser.LogGTEContext ctx) {
+    public String visitLogGTE(calParser.LogGTEContext ctx) {
         return ctx.GTE().getText();
     }
 }
