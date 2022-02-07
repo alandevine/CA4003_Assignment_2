@@ -197,15 +197,16 @@ public class IRGeneratorVisitor extends calBaseVisitor<String> {
         StringBuilder code = new StringBuilder();
 
         int jmpTo;
-        boolean isAnd = false;
 
         String condition = visit(ctx.condition());
+        boolean isAnd = condition.contains("&");
+        boolean isOr  = condition.contains("||");
+
         String[] boolExpressions;
 
-        if (condition.contains("&")) {
-            isAnd = true;
+        if (isAnd)
             boolExpressions = condition.split("&");
-        } else if (condition.contains("||"))
+        else if (isOr)
             boolExpressions = condition.split("||");
         else
             boolExpressions = new String[] {condition};
@@ -213,39 +214,54 @@ public class IRGeneratorVisitor extends calBaseVisitor<String> {
         jmpTo = jmpIdx + boolExpressions.length;
 
         if (isAnd) {
-            for (String _if : boolExpressions) {
-                code.append("\t" + "ifz ").append(_if).append(" goto l").append(jmpIdx).append("\n");
-                code.append("\tgoto exit").append(jmpTo).append("\n");
-                code.append("l").append(jmpIdx).append(":\n");
-                jmpIdx++;
-            }
-            jmpIdx = jmpTo;
-
-            if (ctx.statement_block(0) != null)
-                code.append(visit(ctx.statement_block(0)));
-
-            code.append("\tgoto exit").append(jmpIdx + 1).append("\n");
-            code.append("exit").append(jmpIdx).append(":\n");
-            jmpIdx++;
-
+            code.append(booleanAndStatementHandler(ctx, jmpTo, boolExpressions));
         } else {
-            for (String _if : boolExpressions) {
-                code.append("\t" + "if ").append(_if).append(" goto l").append(jmpIdx).append("\n");
-                code.append("\tgoto exit").append(jmpIdx + 1).append("\n");
-                code.append("l").append(jmpIdx).append(":\n");
-            }
-
-            jmpIdx++;
-            if (ctx.statement_block(0) != null)
-                code.append(visit(ctx.statement_block(0)));
-
-            code.append("\tgoto exit").append(jmpIdx).append("\n");
+            code.append(booleanIfStatementHandler(ctx, boolExpressions));
         }
 
         if (ctx.statement_block(1) != null)
             code.append(visit(ctx.statement_block(1)));
 
         code.append("exit").append(jmpIdx).append(":\n");
+
+        return code.toString();
+    }
+
+    private String booleanIfStatementHandler(calParser.ConditionalStmContext ctx, String[] boolExpressions) {
+        StringBuilder code = new StringBuilder();
+
+        for (String _if : boolExpressions) {
+            code.append("\t" + "if ").append(_if).append(" goto l").append(jmpIdx).append("\n");
+            code.append("\tgoto exit").append(jmpIdx + 1).append("\n");
+            code.append("l").append(jmpIdx).append(":\n");
+        }
+
+        jmpIdx++;
+        if (ctx.statement_block(0) != null)
+            code.append(visit(ctx.statement_block(0)));
+
+        code.append("\tgoto exit").append(jmpIdx).append("\n");
+        return code.toString();
+    }
+
+    private String booleanAndStatementHandler(calParser.ConditionalStmContext ctx, int jmpTo, String[] boolExpressions) {
+
+        StringBuilder code = new StringBuilder();
+
+        for (String _if : boolExpressions) {
+            code.append("\t" + "ifz ").append(_if).append(" goto l").append(jmpIdx).append("\n");
+            code.append("\tgoto exit").append(jmpTo).append("\n");
+            code.append("l").append(jmpIdx).append(":\n");
+            jmpIdx++;
+        }
+        jmpIdx = jmpTo;
+
+        if (ctx.statement_block(0) != null)
+            code.append(visit(ctx.statement_block(0)));
+
+        code.append("\tgoto exit").append(jmpIdx + 1).append("\n");
+        code.append("exit").append(jmpIdx).append(":\n");
+        jmpIdx++;
 
         return code.toString();
     }
