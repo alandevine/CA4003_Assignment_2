@@ -194,7 +194,7 @@ public class IRGeneratorVisitor extends calBaseVisitor<String> {
 
     @Override
     public String visitConditionalStm(calParser.ConditionalStmContext ctx) {
-        String code = "";
+        StringBuilder code = new StringBuilder();
 
         int jmpTo;
         boolean isAnd = false;
@@ -214,40 +214,40 @@ public class IRGeneratorVisitor extends calBaseVisitor<String> {
 
         if (isAnd) {
             for (String _if : boolExpressions) {
-                code += "\t" + "ifz " + _if + " goto l" + jmpIdx + "\n";
-                code += "\tgoto exit" + jmpTo + "\n";
-                code += "l" + jmpIdx + ":\n";
+                code.append("\t" + "ifz ").append(_if).append(" goto l").append(jmpIdx).append("\n");
+                code.append("\tgoto exit").append(jmpTo).append("\n");
+                code.append("l").append(jmpIdx).append(":\n");
                 jmpIdx++;
             }
             jmpIdx = jmpTo;
 
             if (ctx.statement_block(0) != null)
-                code += visit(ctx.statement_block(0));
+                code.append(visit(ctx.statement_block(0)));
 
-            code += "\tgoto exit" + (jmpIdx + 1) + "\n";
-            code += "exit" + jmpIdx + ":\n";
+            code.append("\tgoto exit").append(jmpIdx + 1).append("\n");
+            code.append("exit").append(jmpIdx).append(":\n");
             jmpIdx++;
 
         } else {
             for (String _if : boolExpressions) {
-                code += "\t" + "if " + _if + " goto l" + jmpIdx + "\n";
-                code += "\tgoto exit" + (jmpIdx + 1) + "\n";
-                code += "l" + jmpIdx + ":\n";
+                code.append("\t" + "if ").append(_if).append(" goto l").append(jmpIdx).append("\n");
+                code.append("\tgoto exit").append(jmpIdx + 1).append("\n");
+                code.append("l").append(jmpIdx).append(":\n");
             }
 
             jmpIdx++;
             if (ctx.statement_block(0) != null)
-                code += visit(ctx.statement_block(0));
+                code.append(visit(ctx.statement_block(0)));
 
-            code += "\tgoto exit" + jmpIdx + "\n";
+            code.append("\tgoto exit").append(jmpIdx).append("\n");
         }
 
         if (ctx.statement_block(1) != null)
-            code += visit(ctx.statement_block(1));
+            code.append(visit(ctx.statement_block(1)));
 
-        code += "exit" + jmpIdx + ":\n";
+        code.append("exit").append(jmpIdx).append(":\n");
 
-        return code;
+        return code.toString();
     }
 
     @Override
